@@ -22,3 +22,6 @@ keywords = ["games"]
 
 [project.scripts]
 gamehub = "gamehub:main"
+
+[tool.setuptools.package-data]
+gamehub = ["words.txt"]

@@ -2,6 +2,7 @@
 This module contains the GameHub class, which is the main class of the application.
 It is responsible for parsing the command line arguments and launching the selected game.
 """
+import sys
 import argparse
 from gamehub.chess.chess import Chess
 from . import snake, game_of_life, word_guesser
@@ -17,7 +18,8 @@ class GameHub:
     def __init__(self) -> None:
         self.args = self.setup_parsers()
 
-    def apply_bound(self, value : int, lower_bound : int, upper_bound : int) -> int:
+    @staticmethod
+    def apply_bound(value : int, lower_bound : int, upper_bound : int) -> int:
         """
         Apply a lower and an upper bound to a given value.
 
@@ -28,12 +30,7 @@ class GameHub:
         Returns:
             The bounded value.
         """
-        if value < lower_bound:
-            return lower_bound
-        elif value > upper_bound:
-            return upper_bound
-        else:
-            return value
+        return max(lower_bound, min(value, upper_bound))
         
     def setup_parsers(self) -> argparse.Namespace:
         """
@@ -82,9 +79,13 @@ class GameHub:
                                   choices=["Singleplayer", "Multiplayer"],
                                   help="Two players can play on the same terminal (Multiplayer) or you can play alone against an AI (Singleplayer).\n")
 
-        return parser.parse_args()
+        args = parser.parse_args()
+        if args.game is None:
+            parser.print_help()
+            sys.exit(0)
+        return args
 
-    def run(self) -> None:
+    def run(self) -> object:
         """
         Run the selected game.
         """

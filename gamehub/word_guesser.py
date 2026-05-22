@@ -3,6 +3,7 @@ This module contains the WordGuesser class which is responsible for the Word Gue
 """
 import curses
 from curses import wrapper
+from importlib.resources import files
 import random
 import string
 import time
@@ -120,14 +121,13 @@ class WordGuesser:
             A list of meaningful English words of exactly five letters.
         """
         try:
-            with open('/gamehub/data/words.txt', 'r') as file:
-                words = file.read().splitlines()
+            words = files("gamehub").joinpath("words.txt").read_text(encoding="utf-8").splitlines()
         except FileNotFoundError:
             stdscr.addstr(0, 0, "Unable to locate words dictionary.", curses.A_BOLD)
             stdscr.refresh()
             time.sleep(2)
             sys.exit(1)
-            
+
         return words
 
     def generate_updated_guess(self,
