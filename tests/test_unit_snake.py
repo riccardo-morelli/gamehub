@@ -43,12 +43,12 @@ class TestSnake:
                                 ("KEY_LEFT", "UP", "LEFT"),
                                 ("KEY_DOWN", "DOWN", "DOWN"),
                                 ("KEY_RIGHT", "LEFT", "LEFT")])
-    def test_calcule_direction(self, key : str, current_direction : str, expected : str) -> None:
+    def test_calculate_direction(self, key : str, current_direction : str, expected : str) -> None:
         """
         Test the calculation of the new direction of the snake.
         """
         snake_t = Snake()
-        assert snake_t.calcule_direction(current_direction, key) == expected
+        assert snake_t.calculate_direction(current_direction, key) == expected
 
     @pytest.mark.parametrize("y, x, direction, SNAKE_BOUNDS, expected",
                              [(1, 2, "UP", (1, 10, 2, 20), (1, 2)),
@@ -66,7 +66,7 @@ class TestSnake:
         Test the calculation of the new position of the snake.
         """
         s = Snake()
-        assert s.calcule_new_position(y, x, direction, SNAKE_BOUNDS) == expected
+        assert s.calculate_new_position(y, x, direction, SNAKE_BOUNDS) == expected
 
     @composite
     def smaller_than_y(draw) -> tuple[int, int]:
@@ -92,13 +92,13 @@ class TestSnake:
             strategies.just("LEFT") |
             strategies.just("RIGHT")))
     @settings(max_examples=20)
-    def test_property_calcule_new_position_always_inside(self, t : tuple) -> None:
+    def test_property_calculate_new_position_always_inside(self, t : tuple) -> None:
         """
         Test that the new position found for the snake is always inside the bounds.
         """
         s = Snake()
         SNAKE_BOUNDS = (1, t[0][1], 2, t[1][1])
-        res_y, res_x = s.calcule_new_position(t[0][0],t[1][0],t[2],SNAKE_BOUNDS)
+        res_y, res_x = s.calculate_new_position(t[0][0],t[1][0],t[2],SNAKE_BOUNDS)
         assert res_y >= SNAKE_BOUNDS[0] and res_y <= SNAKE_BOUNDS[1] and res_x >= SNAKE_BOUNDS[2] and res_x <= SNAKE_BOUNDS[3] and res_x % 2 == 0
        
     @pytest.mark.parametrize("body, SNAKE_BOUNDS",

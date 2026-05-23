@@ -42,8 +42,6 @@ class GameOfLife:
             for j in range(cols):
                 if random.randint(0, 100) < density:
                     matrix[i][j] = 1
-                else:
-                    matrix[i][j] = 0
         return matrix
 
     def count_live_neighbors(self, matrix : list[list[int]], y : int, x : int) -> int:
@@ -90,7 +88,7 @@ class GameOfLife:
                 if matrix[i][j] == 1: # Cell is alive
                     if live_neighbors < 2 or live_neighbors > 3:
                         new_matrix[i][j] = 0 # Die (underpopulation or overpopulation)
-                    elif live_neighbors == 3 or live_neighbors == 2:  # Survive
+                    else:  # Survive
                         new_matrix[i][j] = 1
                 else: # Cell is dead
                     if live_neighbors == 3: # Reproduce
@@ -127,7 +125,7 @@ class GameOfLife:
         """
         try:
             last_key = stdscr.getkey()
-        except:
+        except curses.error:
             last_key = None
 
         if self.mode == "Automatic":

@@ -31,7 +31,7 @@ class Snake:
         self.score = 0
         self.highscore = 0
         
-    def calcule_new_position(self,
+    def calculate_new_position(self,
                              y : int,
                              x : int,
                              direction : str,
@@ -61,7 +61,7 @@ class Snake:
                 x += 2
         return y, x
 
-    def calcule_direction(self, current_direction : str, key : str) -> str:
+    def calculate_direction(self, current_direction : str, key : str) -> str:
         """
         Calculates the new direction of the snake's movement.
 
@@ -90,8 +90,7 @@ class Snake:
             body: The entire snake.
             color: The color used in the drawing.
         """
-        for i in range(len(body)):
-            (y, x) = body[i]
+        for y, x in body:
             window.addstr(y, x, "  ", color)
 
     def draw_food(self, window, y : int, x : int, color : int) -> None:
@@ -168,9 +167,7 @@ class Snake:
         Returns:
             True if the snake has eaten the food, False otherwise.
         """
-        if body[len(body) - 1] == (y_food, x_food):
-            return True
-        return False
+        return body[-1] == (y_food, x_food)
 
     def verify_collision(self, body : deque[tuple[int, int]]) -> bool:
         """
@@ -181,10 +178,7 @@ class Snake:
         Returns:
             True if the snake has collided with itself, False otherwise.
         """
-        for i in range(len(body) - 1):
-            if body[len(body) - 1] == body[i]:
-                return True
-        return False
+        return any(body[-1] == body[i] for i in range(len(body) - 1))
     
     def check_terminal_size(self, min_lines : int, min_cols : int, window : object) -> bool:
         """
@@ -288,7 +282,7 @@ class Snake:
         """
         try:
             key = stdscr.getkey()
-        except:
+        except curses.error:
             key = None
         finally:
             time.sleep(self.delta_time)
@@ -340,7 +334,7 @@ class Snake:
         self.update_score_window(score_window)
 
         while last_key != '\x1b':
-            (y, x) = self.calcule_new_position(body[len(body) - 1][0], body[len(body) - 1][1], direction, SNAKE_BOUNDS)
+            (y, x) = self.calculate_new_position(body[-1][0], body[-1][1], direction, SNAKE_BOUNDS)
             body.append((y, x))
             if self.verify_collision(body):
                 self.update_main_window(main_window, COLOR_WHITE_WHITE, COLOR_GREEN_GREEN, COLOR_RED_RED, LINES_MAIN_WINDOW, COLS_MAIN_WINDOW, body, x_food, y_food, True)
@@ -360,7 +354,7 @@ class Snake:
             else:
                 body.popleft()
 
-            direction = self.calcule_direction(direction, last_key)
+            direction = self.calculate_direction(direction, last_key)
             self.update_main_window(main_window, COLOR_WHITE_WHITE, COLOR_GREEN_GREEN, COLOR_RED_RED, LINES_MAIN_WINDOW, COLS_MAIN_WINDOW, body, x_food, y_food)
             last_key = self.get_input_and_delay(stdscr)
         

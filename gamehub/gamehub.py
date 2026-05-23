@@ -101,7 +101,5 @@ class GameHub:
         elif self.args.game == "chess":
             game = Chess(self.args.mode)
             
-        if game is not None:
-            game.init_game()
-
+        game.init_game()
         return game
